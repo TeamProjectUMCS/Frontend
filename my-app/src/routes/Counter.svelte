@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Spring } from 'svelte/motion';
+	import {Spring} from 'svelte/motion';
 
 	const count = new Spring(0);
 	const offset = $derived(modulo(count.current, 1));
@@ -10,23 +10,26 @@
 	}
 </script>
 
-<div class="counter">
-	<button onclick={() => (count.target -= 1)} aria-label="Decrease the counter by one">
-		<svg aria-hidden="true" viewBox="0 0 1 1">
-			<path d="M0,0.5 L1,0.5" />
+<div class="counter flex flex-col items-center border-t border-b border-gray-200 my-4">
+	<button aria-label="Decrease the counter by one" class="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-gray-100"
+			onclick={() => (count.target -= 1)}>
+		<svg aria-hidden="true" class="w-6 h-6" viewBox="0 0 1 1">
+			<path class="stroke-current text-gray-700" d="M0,0.5 L1,0.5"/>
 		</svg>
 	</button>
 
-	<div class="counter-viewport">
-		<div class="counter-digits" style="transform: translate(0, {100 * offset}%)">
-			<strong class="hidden" aria-hidden="true">{Math.floor(count.current + 1)}</strong>
-			<strong>{Math.floor(count.current)}</strong>
+	<div class="counter-viewport w-32 h-16 overflow-hidden text-center relative">
+		<div class="counter-digits absolute w-full h-full" style="transform: translate(0, {100 * offset}%)">
+			<strong aria-hidden="true"
+					class="hidden absolute w-full h-full flex items-center justify-center text-theme-1 text-4xl">{Math.floor(count.current + 1)}</strong>
+			<strong class="absolute w-full h-full flex items-center justify-center text-custom-blue text-4xl">{Math.floor(count.current)}</strong>
 		</div>
 	</div>
 
-	<button onclick={() => (count.target += 1)} aria-label="Increase the counter by one">
-		<svg aria-hidden="true" viewBox="0 0 1 1">
-			<path d="M0,0.5 L1,0.5 M0.5,0 L0.5,1" />
+	<button aria-label="Increase the counter by one" class="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-gray-100"
+			onclick={() => (count.target += 1)}>
+		<svg aria-hidden="true" class="w-6 h-6" viewBox="0 0 1 1">
+			<path class="stroke-current text-gray-700" d="M0,0.5 L1,0.5 M0.5,0 L0.5,1"/>
 		</svg>
 	</button>
 </div>
