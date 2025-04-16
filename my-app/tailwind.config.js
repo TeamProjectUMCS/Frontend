@@ -3,6 +3,9 @@ export default {
     content: ['./src/**/*.{html,js,svelte,ts}'],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Roboto', 'ui-sans-serif', 'system-ui'],
+            },
             // Custom colors
             colors: {
                 'michas': '#1e40af',

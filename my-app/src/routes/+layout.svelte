@@ -1,4 +1,5 @@
 <script lang="ts">
+	import {page} from '$app/state';
 	import Header from './Header.svelte';
 	import '../app.css';
 	// Import our test style
@@ -6,18 +7,16 @@
 	let { children } = $props();
 </script>
 
-<div class="app">
-	<Header />
+
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-neutral-300 to-neutral-500">
+	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register'}
+		<Header/>
+	{/if}
 
 	<main>
 		{@render children()}
 	</main>
 
-	<footer>
-		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
-		</p>
-	</footer>
 </div>
 
 <style>
