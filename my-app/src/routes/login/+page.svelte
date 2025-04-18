@@ -1,5 +1,6 @@
 <script lang="ts">
     import {authAPI} from "$lib/api/authApi";
+    import ErrorPopup from "$lib/shared/ErrorPopup.svelte";
 
     let login = ""
     let password = ""
@@ -17,25 +18,27 @@
     }
 </script>
 
-<main class="flex flex-col justify-center">
-    <h1>Login</h1>
-    <form class="flex flex-col gap-4 w-2/7 mx-auto my-16" on:submit|preventDefault={loginUser}>
-        <div class="flex flex-col gap-1">
-            <label for="login">Login</label>
-            <input bind:value={login} class="rounded-lg  h-8 " id="login" required type="text"/>
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <label for="password">Password</label>
-            <input bind:value={password} class="rounded-lg  h-8 " id="password" required type="password"/>
-        </div>
-
-        <button class="bg-primary-700 rounded-lg h-8 text-neutral-100 " type="submit">Login</button>
-        {#if error}
-            <div class="text-error-600 text-center">
-                {error}
+<div class="flex flex-col  items-center h-screen pt-12 text-neutral-100 ">
+    <div class="flex flex-col gap-4 my-12 w-3/7  border-secondary-400 border-2 rounded-lg bg-neutral-900 p-8 shadow-md">
+        <h1>Logo</h1>
+        <form class="flex flex-col gap-8 mx-auto my-6 max-w-full min-w-form" on:submit|preventDefault={loginUser}>
+            <div class="flex flex-col gap-1">
+                <label for="login">Login</label>
+                <input bind:value={login}
+                       class="rounded-lg pl-2 h-10 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                       id="password"/>
             </div>
-        {/if}
-    </form>
 
-</main>
+            <div class="flex flex-col gap-1">
+                <label for="password">Password</label>
+                <input bind:value={password}
+                       class="rounded-lg pl-2 h-10 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                       id="password" required type="password"/>
+            </div>
+
+            <button class="bg-primary-700 rounded-lg h-10 " type="submit">Login</button>
+        </form>
+    </div>
+</div>
+<ErrorPopup disappear="{() => (error = '')}" error={error}></ErrorPopup>
+
