@@ -8,7 +8,8 @@
 </script>
 
 
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-neutral-300 to-neutral-500">
+<!-- WAZNE NIE DA SIE SKROLLOWAC STRONY DOPOKI JEST TUTAJ OVERFLOW-HIDDEN, w galeri zrobimy wlasnego skrola czy cos , zeby ladnie wygladalo -->
+<div class="h-screen overflow-hidden flex flex-col bg-background">
 	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register'}
 		<Header/>
 	{/if}
@@ -20,11 +21,7 @@
 </div>
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
+
 
 	main {
 		flex: 1;

@@ -8,6 +8,8 @@ export default {
             },
             // Custom colors
             colors: {
+
+
                 'michas': '#1e40af',
                 'michas-light': '#3b82f6',
                 'michas-dark': '#1e3a8a',
@@ -104,7 +106,10 @@ export default {
                 '4/7': '57.1428571%',
                 '5/7': '71.4285714%',
                 '6/7': '85.7142857%',
-                'special': '45.5%',
+                'half': '50%',
+            },
+            minWidth: {
+                'form': '85%',
             },
             // Custom height specific values
             height: {
