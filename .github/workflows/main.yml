@@ -2,6 +2,9 @@ name: Trigger Main Repo Sync
 on:
   schedule:
     - cron: "0 16 * * *" # Runs every day at 6 PM CET (4 PM UTC during CEST)
+  push:
+    branches:
+      - main
 
 env:
   SUBMODULE_NAME: "Frontend"
