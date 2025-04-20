@@ -9,7 +9,7 @@
 
 
 <!-- WAZNE NIE DA SIE SKROLLOWAC STRONY DOPOKI JEST TUTAJ OVERFLOW-HIDDEN, w galeri zrobimy wlasnego skrola czy cos , zeby ladnie wygladalo -->
-<div class="h-screen overflow-hidden flex flex-col bg-background">
+<div class="h-screen  flex flex-col bg-background">
 	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register'}
 		<Header/>
 	{/if}

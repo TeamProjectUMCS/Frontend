@@ -3,6 +3,9 @@
     import ErrorPopup from "$lib/shared/ErrorPopup.svelte";
     import {apiRequest} from "$lib/api/authApi";
 
+    // Add a callback prop
+    export let onMediaUpdate: (media: string[]) => void = () => {};
+
     let files: FileList | null = null;
     let mediaType: 'image' | 'video' = 'image';
     let userMedia: string[] = [];
@@ -17,6 +20,8 @@
         try {
             userMedia = await apiRequest<string[]>('/api/media/list');
             console.log('Loaded user media:', userMedia);
+            // Call the callback with updated media
+            onMediaUpdate(userMedia);
         } catch (err) {
             console.error('Error loading media:', err);
         }
@@ -34,10 +39,7 @@
         formData.append('type', mediaType);
 
         try {
-            await apiRequest('/api/media/upload', {
-                method: 'POST',
-                body: formData
-            });
+            await apiRequest('/api/media/upload', { method: 'POST', body: formData });
             files = null;
             await loadUserMedia();
         } catch (err) {
@@ -63,6 +65,8 @@
         return urlParts[urlParts.length - 1];
     }
 </script>
+
+
 
 <ErrorPopup {error} disappear={() => error = ""}/>
 <div class="max-w-3xl mx-auto p-5">

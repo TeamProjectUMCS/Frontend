@@ -4,16 +4,18 @@ import type Preference from "$lib/data/Preference";
 
 const API_URL = 'http://localhost:8080';
 
-export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+export async function apiRequest<T>(endpoint: string, options: RequestInit = {}, contentType: string = 'application/json'): Promise<T> {
     console.log(`API Request: ${endpoint}, Method: ${options.method || 'GET'}`);
-    console.log(`Request Body: ${options.body}`);
-
 
     const token = localStorage.getItem('jwt');
-
     const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
     };
+
+    // Only set Content-Type if it's not a FormData request
+    if (!(options.body instanceof FormData)) {
+        headers['Content-Type'] = contentType;
+    }
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
@@ -24,20 +26,20 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
         body: options.body,
         headers
     });
-
+    console.log("Request headers:", headers);
 
     // Handle unauthorized errors
     if (response.status === 401) {
         console.log('Unauthorized access - with status 401');
-        console.log(options.body)
-        console.log(options.method)
+        console.log(options.body);
+        console.log(options.method);
         auth.logout();
         throw new Error('Unauthorized');
     }
 
     if (!response.ok) {
         const errorText = await response.text();
-        console.log(errorText)
+        console.log(errorText);
         throw new Error(errorText || 'API request failed');
     }
 
