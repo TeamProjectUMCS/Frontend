@@ -10,10 +10,7 @@ export default {
             colors: {
 
 
-                'michas': '#1e40af',
-                'michas-light': '#3b82f6',
-                'michas-dark': '#1e3a8a',
-                'dark': '#1e0000',
+
 
                 // 700 is default
                 'primary': {

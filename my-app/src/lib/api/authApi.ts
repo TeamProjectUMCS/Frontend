@@ -5,6 +5,10 @@ import type Preference from "$lib/data/Preference";
 const API_URL = 'http://localhost:8080';
 
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    console.log(`API Request: ${endpoint}, Method: ${options.method || 'GET'}`);
+    console.log(`Request Body: ${options.body}`);
+
+
     const token = localStorage.getItem('jwt');
 
     const headers: Record<string, string> = {
@@ -20,6 +24,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
         body: options.body,
         headers
     });
+
 
     // Handle unauthorized errors
     if (response.status === 401) {
@@ -37,6 +42,9 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
     }
 
     const text = await response.text();
+    console.log(`Response Status: ${response.status}`);
+    console.log(`Response Body: ${text}`);
+
     return text ? JSON.parse(text) : {} as T;
 }
 
