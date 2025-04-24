@@ -9,7 +9,7 @@
 
 
 <!-- WAZNE NIE DA SIE SKROLLOWAC STRONY DOPOKI JEST TUTAJ OVERFLOW-HIDDEN, w galeri zrobimy wlasnego skrola czy cos , zeby ladnie wygladalo -->
-<div class="h-screen  flex flex-col bg-background">
+<div class="h-screen  flex flex-col bg-background text-neutral-100">
 	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register'}
 		<Header/>
 	{/if}
@@ -23,6 +23,7 @@
 <style>
 
 
+
 	main {
 		flex: 1;
 		display: flex;
@@ -32,6 +33,7 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
+
 	}
 
 	footer {

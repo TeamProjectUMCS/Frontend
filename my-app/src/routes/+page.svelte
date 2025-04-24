@@ -1,52 +1,32 @@
 <script lang="ts">
-	import Counter from './Counter.svelte';
-	import MichasExample from './MichasExample.svelte';
-	import CustomSizesDemo from './CustomSizesDemo.svelte';
-	import Tailwind3Demo from './Tailwind3Demo.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcomeFallback from '$lib/images/svelte-welcome.png';
+	import logo from '$lib/images/logo1.png';
 </script>
 
 <svelte:head>
 	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <section>
 	<h1>
 		<span class="welcome bg">
 			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcomeFallback} alt="Welcome" />
+				<img src={logo} alt="logo of svelove" />
 			</picture>
 		</span>
-
-		to your new<br />SvelteKit app
 	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-	<MichasExample>
-
-	</MichasExample>
-
-	<Counter />
-
-
-	<div class="mt-8">
-		<h2 class="text-2xl font-bold mb-4">Custom Sizes Demo</h2>
-		<CustomSizesDemo/>
-	</div>
-
-	<div class="mt-8">
-		<h2 class="text-2xl font-bold mb-4">Tailwind CSS 3 Demo</h2>
-		<Tailwind3Demo/>
+	<div class="flex space-x-4">
+	<a href="/register" class="button bg-primary-700 rounded-lg h-10">
+		Register
+	</a>
+	<a href="/login" class="button bg-primary-700 rounded-lg h-10">
+		Login
+	</a>
 	</div>
 </section>
 
 <style>
 	section {
+
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -61,9 +41,19 @@
 	.welcome {
 		display: block;
 		position: relative;
-		width: 100%;
+		width: 50%;
+		margin: auto;
 		height: 0;
 		padding: 0 0 calc(100% * 495 / 2048) 0;
+	}
+
+	.button {
+		display: inline-block;
+		padding: 0.5em 1em;
+		color: white;
+		text-decoration: none;
+		border-radius: 4px;
+		cursor: pointer;
 	}
 
 	.welcome img {
