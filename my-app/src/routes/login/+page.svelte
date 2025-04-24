@@ -9,8 +9,7 @@
     async function loginUser() {
         try {
             const response = await authAPI.login(login, password);
-
-            window.location.href = "/";
+            window.location.href = "/main";
         } catch (err) {
             console.error(err);
             error = `Jakis error trzeba wstawic na razie ${err}`;
