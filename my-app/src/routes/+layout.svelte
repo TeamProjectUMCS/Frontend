@@ -1,30 +1,27 @@
 <script lang="ts">
+	import {page} from '$app/state';
 	import Header from './Header.svelte';
 	import '../app.css';
+	// Import our test style
 
 	let { children } = $props();
 </script>
 
-<div class="app">
-	<Header />
+
+<!-- WAZNE NIE DA SIE SKROLLOWAC STRONY DOPOKI JEST TUTAJ OVERFLOW-HIDDEN, w galeri zrobimy wlasnego skrola czy cos , zeby ladnie wygladalo -->
+<div class="h-screen  flex flex-col bg-background">
+	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register'}
+		<Header/>
+	{/if}
 
 	<main>
 		{@render children()}
 	</main>
 
-	<footer>
-		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
-		</p>
-	</footer>
 </div>
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
+
 
 	main {
 		flex: 1;

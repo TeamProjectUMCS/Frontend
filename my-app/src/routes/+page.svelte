@@ -1,5 +1,8 @@
 <script lang="ts">
 	import Counter from './Counter.svelte';
+	import MichasExample from './MichasExample.svelte';
+	import CustomSizesDemo from './CustomSizesDemo.svelte';
+	import Tailwind3Demo from './Tailwind3Demo.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcomeFallback from '$lib/images/svelte-welcome.png';
 </script>
@@ -11,7 +14,7 @@
 
 <section>
 	<h1>
-		<span class="welcome">
+		<span class="welcome bg">
 			<picture>
 				<source srcset={welcome} type="image/webp" />
 				<img src={welcomeFallback} alt="Welcome" />
@@ -24,8 +27,22 @@
 	<h2>
 		try editing <strong>src/routes/+page.svelte</strong>
 	</h2>
+	<MichasExample>
+
+	</MichasExample>
 
 	<Counter />
+
+
+	<div class="mt-8">
+		<h2 class="text-2xl font-bold mb-4">Custom Sizes Demo</h2>
+		<CustomSizesDemo/>
+	</div>
+
+	<div class="mt-8">
+		<h2 class="text-2xl font-bold mb-4">Tailwind CSS 3 Demo</h2>
+		<Tailwind3Demo/>
+	</div>
 </section>
 
 <style>
