@@ -1,4 +1,3 @@
-
 FROM node:18-alpine AS build
 
 WORKDIR /app
@@ -7,8 +6,12 @@ WORKDIR /app
 COPY my-app/package*.json ./
 RUN npm ci
 
+
+
 # Copy all project files and build
 COPY my-app/ .
+# Install build dependencies
+RUN npm install
 RUN npm run build
 
 # Production stage
