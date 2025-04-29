@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm ci
 
 # Copy all project files and build
-COPY . .
+COPY .. .
 RUN npm run build
 
 # Production stage
