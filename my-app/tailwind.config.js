@@ -6,12 +6,11 @@ export default {
             fontFamily: {
                 sans: ['Roboto', 'ui-sans-serif', 'system-ui'],
             },
+            textColor: {
+                DEFAULT: '#e7e7e7',
+            },
             // Custom colors
             colors: {
-
-
-
-
                 // 700 is default
                 'primary': {
                     '50': '#fdf5fe',
