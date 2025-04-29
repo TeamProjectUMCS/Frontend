@@ -13,8 +13,7 @@ steps:
 
   # Optional: Package the build output into a container
   - name: 'gcr.io/cloud-builders/docker'
-    dir: 'my-app'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/sveltekit-app:$COMMIT_SHA', '.' ]
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/sveltekit-app:$COMMIT_SHA', '-f', 'my-app/Dockerfile', './my-app' ]
 
   # Optional: Push the container to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
