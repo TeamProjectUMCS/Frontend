@@ -6,8 +6,16 @@ WORKDIR /app
 COPY my-app/package*.json ./
 RUN npm ci
 
+# Install the missing adapter
+RUN npm install --save-dev @sveltejs/adapter-node
+
 # Copy all project files and build
 COPY my-app/ .
+
+# Generate the .svelte-kit directory
+RUN npx svelte-kit sync
+
+# Now build the application
 RUN npm run build
 
 # Production stage
