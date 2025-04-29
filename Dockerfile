@@ -1,11 +1,13 @@
 FROM node:18-alpine AS build
 
-WORKDIR /app/my-app
+WORKDIR /app
 
-COPY . .
-# Install build dependencies
-RUN npm install
+# Copy package files and install dependencies
+COPY my-app/package*.json ./
+RUN npm ci
+
 # Copy all project files and build
+COPY my-app/ .
 RUN npm run build
 
 # Production stage
