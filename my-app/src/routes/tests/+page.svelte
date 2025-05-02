@@ -1,7 +1,7 @@
 <script lang="ts">
     import MediaUpload from "$lib/shared/MediaUpload.svelte";
-    import { onMount } from 'svelte';
-    import { apiRequest } from "$lib/api/authApi";
+    import {onMount} from 'svelte';
+    import {apiRequest} from "$lib/api/authApi";
 
     let uploadedMedia: string[] = [];
 
@@ -45,7 +45,7 @@
     }
 </script>
 
-<div class="max-w-3xl mx-auto p-5">
+<div class="max-w-3xl mx-auto p-5 ">
     <h1 class="text-2xl font-bold mb-6">Media Upload Test</h1>
 
     <MediaUpload onMediaUpdate={handleMediaUpdate} />
