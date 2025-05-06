@@ -1,8 +1,11 @@
-<!-- App.svelte -->
 <script lang="ts">
-    import {onMount} from 'svelte';
+    import {onMount, onDestroy} from 'svelte';
+    import {Client} from '@stomp/stompjs';
+    import type {IMessage, StompSubscription} from '@stomp/stompjs';
+    import {auth} from '$lib/auth/auth';
+    import {userStorage} from "$lib/auth/userStorage";
 
-    // Define message type
+    // Define message types
     type MessageSender = 'self' | 'other';
 
     interface ChatMessage {
@@ -10,6 +13,7 @@
         text: string;
         sender: MessageSender;
         timestamp: Date;
+        senderId?: number;
     }
 
     interface User {
@@ -18,92 +22,211 @@
         isActive: boolean;
     }
 
-    // Sample messages data
-    let messages: ChatMessage[] = [
-        {id: 1, text: "Hello, how can I help you today?", sender: "other", timestamp: new Date(Date.now() - 3600000)},
-        {id: 2, text: "I need assistance with my account settings.", sender: "self", timestamp: new Date(Date.now() - 3000000)},
-        {
-            id: 3,
-            text: "Sure, I'd be happy to help with that. What specific settings are you trying to adjust?",
-            sender: "other",
-            timestamp: new Date(Date.now() - 2400000)
-        }
-    ];
+    interface MessageRequestDto {
+        content: string;
+        writtenBy: number;
+        matchId: number;
+        timestamp: number ;
+    }
 
-    // Sample users data
-    let users: User[] = [
-        {id: 1, name: "Username", isActive: true},
-        {id: 2, name: "Sarah", isActive: false},
-        {id: 3, name: "John", isActive: false},
-        {id: 4, name: "Alex", isActive: false},
-        {id: 5, name: "Maya", isActive: false},
-        {id: 6, name: "Maya", isActive: false},
-        {id: 7, name: "Maya", isActive: false},
-        {id: 8, name: "Maya", isActive: false},
-        {id: 9, name: "Maya", isActive: false},
-        {id: 10, name: "Maya", isActive: false},
-        {id: 11, name: "Maya", isActive: false},
-        {id: 12, name: "Maya", isActive: false},
-        {id: 13, name: "Maya", isActive: false}
+    interface MessageResponseDto {
+        id: number;
+        content: string;
+        senderId: number;
+        timestamp: number;
+    }
 
-    ];
+    // WebSocket client
+    let stompClient: Client | null = null;
+    let subscription: StompSubscription | null = null;
+    let currentMatchId: number = 1;
+    let currentUser: any = null;
 
-    let newMessage = "";
+    let chat = $state({
+        messages: [] as ChatMessage[],
+        users: [] as User[],
+        newMessage: ""
+    });
+
     let chatContainer: HTMLElement;
 
-    function selectUser(userId: number): void {
-        users = users.map(user => ({
-            ...user,
-            isActive: user.id === userId
-        }));
+    onMount(() => {
+        // Get current user from auth store
+        const unsubscribe = auth.subscribe(value => {
+            currentUser = value.user;
+        });
 
-        // In a real app, you would load messages for the selected user here
-        // For now we'll just simulate this behavior
-        if (userId !== 1) {
-            messages = [
-                {id: 1, text: `This is a conversation with user ${userId}.`, sender: "other", timestamp: new Date(Date.now() - 1800000)}
-            ];
-        } else {
-            messages = [
-                {id: 1, text: "Hello, how can I help you today?", sender: "other", timestamp: new Date(Date.now() - 3600000)},
-                {id: 2, text: "I need assistance with my account settings.", sender: "self", timestamp: new Date(Date.now() - 3000000)},
-                {
-                    id: 3,
-                    text: "Sure, I'd be happy to help with that. What specific settings are you trying to adjust?",
-                    sender: "other",
-                    timestamp: new Date(Date.now() - 2400000)
-                }
-            ];
+        // Initialize and load data
+        initializeData();
+
+        return () => {
+            unsubscribe();
+        };
+    });
+
+    onDestroy(() => {
+        if (stompClient && stompClient.connected) {
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+            stompClient.deactivate();
+        }
+    });
+
+    async function initializeData(): Promise<void> {
+        loadMatches();
+        initializeWebSocket();
+    }
+
+    //TODO : CHANGE TO FETCH
+    function loadMatches(): void {
+        let curr = userStorage.getUser()
+        let user1 : User = {
+            id: 1,
+            name: 'test',
+            isActive: true
+        };
+
+        let user2 : User = {
+            id: 2,
+            name: 'test2',
+            isActive: true
+        };
+        if (curr === "test"){
+            chat.users.push(user2);
+        }else {
+            chat.users.push(user1);
         }
 
-        // Scroll to bottom after changing conversation
-        setTimeout(() => {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+        console.log(chat.users)
+    }
+
+    function initializeWebSocket(): void {
+        stompClient = new Client({
+            brokerURL: 'ws://localhost:8080/ws',
+            connectHeaders: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+            },
+            debug: function (str) {
+                console.log('STOMP: ' + str);
+            },
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000
+        });
+
+        stompClient.onConnect = () => {
+            console.log('Connected to WebSocket');
+
+            // If we have a selected match, subscribe to its messages
+            if (currentMatchId) {
+                subscribeToMatch(currentMatchId);
             }
-        }, 50);
+        };
+
+        stompClient.onStompError = (frame) => {
+            console.error('STOMP error', frame);
+        };
+
+        stompClient.activate();
+    }
+
+    function subscribeToMatch(matchId: number): void {
+        if (stompClient && stompClient.connected) {
+            // Unsubscribe from previous topic if any
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+
+            // Subscribe to the new match's messages
+            subscription = stompClient.subscribe(`/topic/messages/${matchId}`, (message: IMessage) => {
+                const receivedMessage = JSON.parse(message.body) as MessageRequestDto;
+
+                // Add the received message to our messages array
+                const newMsg: ChatMessage = {
+                    id: chat.messages.length + 1,
+                    text: receivedMessage.content,
+                    sender: receivedMessage.writtenBy === currentUser.id ? 'self' : 'other',
+                    timestamp: new Date(receivedMessage.timestamp),
+                    senderId: receivedMessage.writtenBy
+                };
+
+                chat.messages.push( newMsg)
+
+                // Scroll to bottom
+                setTimeout(() => {
+                    if (chatContainer) {
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                }, 50);
+            });
+        }
+    }
+
+    async function selectUser(matchId: number): Promise<void> {
+        // Update active user in UI
+        chat.users = chat.users.map(user => ({
+            ...user,
+            isActive: user.id === matchId
+        }));
+
+        currentMatchId = matchId;
+
+        // Load message history for this match
+        try {
+            const response = await fetch(`http://localhost:8080/chat/${matchId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                }
+            });
+
+            if (response.ok) {
+                const messageHistory = await response.json() as MessageResponseDto[];
+                chat.messages = messageHistory.map(msg => ({
+                    id: msg.id,
+                    text: msg.content,
+                    sender: msg.senderId === currentUser.id ? 'self' : 'other',
+                    timestamp: new Date(msg.timestamp),
+                    senderId: msg.senderId
+                }));
+
+                // Subscribe to this match's WebSocket topic
+                subscribeToMatch(matchId);
+
+                // Scroll to bottom
+                setTimeout(() => {
+                    if (chatContainer) {
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                    }
+                }, 50);
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+        }
     }
 
     // Function to send a new message
     function sendMessage(): void {
-        if (newMessage.trim() === "") return;
+        if (chat.newMessage.trim() === "" || !currentMatchId) return;
 
-        const message: ChatMessage = {
-            id: messages.length + 1,
-            text: newMessage,
-            sender: "self",
-            timestamp: new Date()
+        // Create message object
+        const messageToSend: MessageRequestDto = {
+            timestamp: Date.now(),
+            content: chat.newMessage,
+            writtenBy: 1,     // was senderId
+            matchId: currentMatchId        // new: must be sent explicitly
         };
 
-        messages = [...messages, message];
-        newMessage = "";
+        // Send via WebSocket
+        if (stompClient && stompClient.connected) {
+            stompClient.publish({
+                destination: `/app/chat/${currentMatchId}`,
+                body: JSON.stringify(messageToSend)
+            });
+        }
 
-        // Scroll to bottom after message is added
-        setTimeout(() => {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-        }, 50);
+        // Clear input
+        chat.newMessage = "";
     }
 
     // Handle enter key to send message
@@ -118,22 +241,16 @@
     function formatTime(date: Date): string {
         return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
     }
-
-    // Scroll to bottom on mount
-    onMount(() => {
-        if (chatContainer) {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    });
 </script>
 
+<!-- Rest of your HTML remains the same -->
 <div class="flex h-full w-full bg-gray-900 text-gray-100 overflow-hidden">
     <!-- Chat Content -->
     <div class="flex w-full h-full overflow-hidden">
         <!-- User List Sidebar -->
         <div class="w-40 border-r border-gray-700 h-almost-screen overflow-y-auto flex-shrink-0">
             <div class="p-2">
-                {#each users as user}
+                {#each chat.users as user}
                     <div
                             class="flex items-center p-2 mb-2 hover:bg-gray-800 rounded cursor-pointer {user.isActive ? 'bg-gray-700 border-l-2 border-blue-400' : ''}"
                             on:click={() => selectUser(user.id)}
@@ -152,7 +269,7 @@
             <!-- Message list with fixed height and scrollbar -->
             <div bind:this={chatContainer} class="h-64 flex-1 overflow-y-auto p-4 space-y-4 max-h-128">
                 <div class="flex flex-col space-y-4">
-                    {#each messages as message}
+                    {#each chat.messages as message}
                         <div class="flex flex-col {message.sender === 'self' ? 'items-end' : 'items-start'}">
                             <div class="{message.sender === 'self' ? 'bg-pink-200 text-gray-800' : 'bg-green-200 text-gray-800'} rounded-lg px-4 py-2 max-w-xs sm:max-w-md break-words">
                                 {message.text}
@@ -169,7 +286,7 @@
             <div class="border-t border-gray-700 p-3 flex-shrink-0">
                 <div class="flex items-center">
                     <input
-                            bind:value={newMessage}
+                            bind:value={chat.newMessage}
                             class="flex-1 bg-gray-800 border border-gray-700 rounded-l-md py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             on:keydown={handleKeydown}
                             placeholder="Type a message..."
