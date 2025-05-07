@@ -133,6 +133,10 @@ export default {
             flex: {
                 '0.6': '0.6',
             },
+            boxShadow:{
+                'button' : '0px 0px 30px -6px rgba(0, 0, 0, 1)',
+                'form' : '0px 0px 40px 10px rgba(0, 0, 0, 0.7)'
+            }
         },
     },
     plugins: [],
