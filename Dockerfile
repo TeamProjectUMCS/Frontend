@@ -4,7 +4,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY my-app/package*.json ./
-RUN npm ci
+RUN npm install
+
 
 # Install the missing adapter
 RUN npm install --save-dev @sveltejs/adapter-node
