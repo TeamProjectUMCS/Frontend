@@ -16,6 +16,10 @@
 		<li aria-current={page.url.pathname === '/logout' ? 'page' : undefined}>
 			<a href="/" class="text-white">Logout</a>
 		</li>
+    <li aria-current={page.url.pathname.startsWith('/chat') ? 'page' : undefined}>
+				<a href="/chat" class ="text-white">chat</a>
+			</li>
 	</ul>
 </div>
+
 

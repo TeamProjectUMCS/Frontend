@@ -60,7 +60,7 @@ export const authAPI = {
         });
 
         if (response.token) {
-            auth.login(response.token, response.username)
+            auth.login(response.token, {id: response.id, username: response.username})
         }
 
         return response;
@@ -96,6 +96,7 @@ export interface TokenRequestDto {
 
 export interface JwtResponseDto {
     username: string;
+    id : number;
     token: string;
 }
 

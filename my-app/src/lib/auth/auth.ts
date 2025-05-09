@@ -1,8 +1,13 @@
 import {writable} from 'svelte/store';
 
+export interface User {
+    id: number;
+    username: string;
+}
+
 interface AuthState {
     token: string | null;
-    user: string | null;
+    user: User | null;
     isAuthenticated: boolean;
 }
 
@@ -23,7 +28,7 @@ function createAuthStore() {
 
     return {
         subscribe,
-        login: (token: string, user: string) => {
+        login: (token: string, user: User) => {
             localStorage.setItem('jwt', token);
             localStorage.setItem('user', JSON.stringify(user));
             set({token, user, isAuthenticated: true});
@@ -35,10 +40,12 @@ function createAuthStore() {
             set({token: null, user: null, isAuthenticated: false});
         },
 
-        updateUser: (userData: Partial<AuthState['user']>) => {
+        updateUser: (userData: Partial<User>) => {
             update(state => {
-                const updatedUser = state.user;
-                localStorage.setItem('user', JSON.stringify(updatedUser));
+                const updatedUser = state.user ? {...state.user, ...userData} : null;
+                if (updatedUser) {
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                }
                 return {...state, user: updatedUser};
             });
         }
