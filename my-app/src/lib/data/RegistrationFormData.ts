@@ -1,7 +1,7 @@
 import type Sex from "$lib/data/Sex";
 import type Preference from "$lib/data/Preference";
 
-class User {
+class RegistrationFormData {
     username: string;
     password: string;
     login: string;
@@ -17,4 +17,4 @@ class User {
     }
 }
 
-export default User;
+export default RegistrationFormData;
