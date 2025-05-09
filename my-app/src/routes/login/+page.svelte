@@ -17,6 +17,8 @@
     }
 </script>
 
+{@debug error}
+
 <div class="flex flex-col  items-center h-screen pt-12 text-neutral-100 ">
     <div class="flex flex-col gap-4 my-12 w-3/7  border-secondary-400 border-2 rounded-lg bg-neutral-900 p-8 shadow-md">
         <h1>Logo</h1>
