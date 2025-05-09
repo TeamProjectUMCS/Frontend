@@ -29,34 +29,34 @@
 </script>
 
 <div class="flex flex-col items-center h-screen  text-neutral-100">
-    <div class="flex flex-col gap-2 my-6 w-3/7 border-secondary-400 border-2 rounded-lg bg-neutral-900 p-8 shadow-md">
+    <div class="flex flex-col gap-2 my-6 w-3/7 border-secondary-400 border-2 rounded-lg bg-neutral-900 p-8 max-w-[400px] shadow-form">
         <h2 class="text-4xl font-bold text-center">Register</h2>
         <form class="flex flex-col gap-6 mx-auto my-6 max-w-full min-w-form" on:submit|preventDefault={registerUser}>
             <div class="flex flex-col gap-1">
                 <label for="username">Username</label>
                 <input bind:value={username}
-                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                        id="username" required type="text"/>
             </div>
 
             <div class="flex flex-col gap-1">
                 <label for="login">Login</label>
                 <input bind:value={login}
-                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                        id="login"/>
             </div>
 
             <div class="flex flex-col gap-1">
                 <label for="password">Password</label>
                 <input bind:value={password}
-                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                        id="password" required type="password"/>
             </div>
 
             <div class="flex flex-col gap-1">
                 <label for="sex">Sex</label>
                 <select bind:value={sex}
-                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                         id="sex" required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -67,7 +67,7 @@
             <div class="flex flex-col gap-1">
                 <label for="preference">Preference</label>
                 <select bind:value={preference}
-                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700"
+                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                         id="preference" required>
                     <option value="Men">Men</option>
                     <option value="Women">Women</option>
@@ -75,7 +75,7 @@
                 </select>
             </div>
 
-            <button class="bg-primary-700 rounded-lg h-8" type="submit">Register</button>
+            <button class="bg-primary-700 rounded-lg h-8 shadow-button" type="submit">Register</button>
         </form>
     </div>
 </div>

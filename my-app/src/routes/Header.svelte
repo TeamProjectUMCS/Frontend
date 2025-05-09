@@ -2,20 +2,24 @@
 	import {page} from '$app/state';
 </script>
 
-<header class="flex items-center justify-between p-4 bg-neutral-700 text-neutral-100">
-	<nav class="flex items-center justify-between w-screen">
-		<ul class="flex items-center space-x-4 text-neutral-100">
-			<li aria-current={page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
+<div class=" text-white">
+	<ul>
+		<li aria-current={page.url.pathname === '/chat' ? 'page' : undefined}>
+			<a href="/" class="text-white">Chat</a>
+		</li>
+		<li aria-current={page.url.pathname === '/profile' ? 'page' : undefined} >
+			<a href="/" class="text-white">Profile</a>
+		</li>
+		<li aria-current={page.url.pathname.startsWith('/tests') ? 'page' : undefined}>
+			<a href="/tests" class="text-white">TEST</a>
+		</li>
+		<li aria-current={page.url.pathname === '/logout' ? 'page' : undefined}>
+			<a href="/" class="text-white">Logout</a>
+		</li>
+    <li aria-current={page.url.pathname.startsWith('/chat') ? 'page' : undefined}>
+				<a href="/chat" class ="text-white">chat</a>
 			</li>
-			<li aria-current={page.url.pathname.startsWith('/tests') ? 'page' : undefined}>
-				<a href="/tests">TEST</a>
-			</li>
-			<li aria-current={page.url.pathname.startsWith('/chat') ? 'page' : undefined}>
-				<a href="/chat">chat</a>
-			</li>
-		</ul>
-	</nav>
-</header>
+	</ul>
+</div>
 
 
