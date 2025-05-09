@@ -117,6 +117,7 @@
                         class="flex items-center p-2 mb-2 hover:bg-gray-800 rounded cursor-pointer {user.isActive ? 'bg-gray-700 border-l-2 border-blue-400' : ''}"
                         on:click={() => selectUserHandler(user.id)}
                     >
+
                         <div class="w-6 h-6 rounded-full {user.isActive ? 'bg-blue-400' : 'bg-gray-400'} flex-shrink-0"></div>
                         <div class="ml-2 truncate text-sm {user.isActive ? 'font-medium text-gray-200' : 'text-gray-400'}">
                             {user.name}
