@@ -19,7 +19,7 @@
 					<a href="/" class="text-white">Logout</a>
 				</li>
 				<li aria-current={page.url.pathname === '/profile' ? 'page' : undefined} >
-					<a href="/" class="text-white">Profile</a>
+					<a href="/profile" class="text-white">Profile</a>
 				</li>
 			</ul>
 		</nav>
