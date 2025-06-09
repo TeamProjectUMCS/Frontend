@@ -106,6 +106,10 @@ export interface RegisterRequest {
     password: string;
     sex: Sex;
     preference: Preference;
+    age: number,
+    age_min: number,
+    age_max: number,
+    description: string
 }
 
 export interface RegisterResponseDto {
