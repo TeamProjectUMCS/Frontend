@@ -1,6 +1,7 @@
 import {auth} from "$lib/auth/auth";
 import type Sex from "$lib/data/Sex";
 import type Preference from "$lib/data/Preference";
+import type {List} from "postcss/lib/list";
 
 const API_URL = 'http://localhost:8080';
 
@@ -116,4 +117,15 @@ export interface RegisterResponseDto {
     username: string;
     login: string;
     message: string;
+}
+
+export interface UserMatchDto {
+    id: number;
+    username: string;
+    sex: Sex;
+    age: number;
+    preference: Preference;
+    // hobbies: List,
+    description:string;
+
 }
