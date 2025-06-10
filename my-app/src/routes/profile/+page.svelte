@@ -9,7 +9,7 @@
         hobbies: string[];
         description: string;
         localization: string | null;
-        age: number;
+        // age: number;
         age_min: number;
         age_max: number;
     };
@@ -60,7 +60,7 @@
                 editedPreference = profile.preference;
                 editedDescription = profile.description;
                 editedLocalization = profile.localization ?? "";
-                editedAge = profile.age;
+                // editedAge = profile.age;
                 editedAgeMin = profile.age_min;
                 editedAgeMax = profile.age_max;
             }
@@ -91,7 +91,6 @@
                     hobbyIds: [],
                     description: editedDescription,
                     localization: editedLocalization,
-                    age: editedAge,
                     ageMin: editedAgeMin,
                     ageMax: editedAgeMax,
                     sex: editedSex.toUpperCase()
@@ -149,7 +148,7 @@
     onMount(fetchProfile);
 </script>
 
-<div class="p-8 max-w-3xl mx-auto bg-background text-neutral-100 rounded-2xl shadow-form font-sans">
+<div class="p-8 max-w-xl mx-auto m-10 bg-background text-neutral-100 rounded-2xl shadow-form font-sans">
     {#if loading}
         <p>Ładowanie profilu...</p>
     {:else if error}
@@ -158,10 +157,11 @@
         <h1 class="text-3xl font-bold text-primary-500 mb-4">{profile.username}</h1>
 
         <h2 class="text-2xl text-secondary-500 font-semibold mt-8 mb-4">Dane osobowe</h2>
-        <div class="mb-4"><strong>Login:</strong> {profile.login}</div>
+<!--        <div class="mb-4"><strong>Login:</strong> {profile.login}</div>-->
 
-        <div class="mb-4">
-            <label class="block mb-1">Płeć:</label>
+        <div class="flex flex-row gap-4 justify-center max-w-full">
+        <div class="w-1/2 mb-4">
+            <label class="text-lg block mb-1">Płeć:</label>
             <select bind:value={editedSex} class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100">
                 {#each sexOptions as option}
                     <option value={option}>{option}</option>
@@ -169,23 +169,24 @@
             </select>
         </div>
 
-        <div class="mb-4">
-            <label class="block mb-1">Preferencje:</label>
+        <div class=" w-1/2 mb-4">
+            <label class=" text-lg block mb-1">Preferencje:</label>
             <select bind:value={editedPreference} class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100">
                 {#each preferenceOptions as option}
                     <option value={option}>{option}</option>
                 {/each}
             </select>
         </div>
-
-        <div class="mb-4">
-            <label class="block mb-1">Wiek:</label>
-            <input type="number" min="18" bind:value={editedAge}
-                   class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
         </div>
 
+<!--        <div class="mb-4">-->
+<!--            <label class="block mb-1">Wiek:</label>-->
+<!--            <input type="number" min="18" bind:value={editedAge}-->
+<!--                   class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />-->
+<!--        </div>-->
+
         <div class="mb-4">
-            <label class="block mb-1">Zakres wieku partnera:</label>
+            <label class="block mb-1 text-lg">Zakres wieku partnera:</label>
             <div class="flex gap-4">
                 <input type="number" min="18" bind:value={editedAgeMin}
                        class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
@@ -195,13 +196,13 @@
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1">Opis:</label>
+            <label class="text-lg block mb-1">Opis:</label>
             <textarea rows="4" bind:value={editedDescription}
                       class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100"></textarea>
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1">Lokalizacja:</label>
+            <label class="text-lg block mb-1">Lokalizacja:</label>
             <input type="text" bind:value={editedLocalization}
                    class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
         </div>
@@ -227,19 +228,19 @@
         {/if}
 
         <div class="mb-4">
-            <label class="block mb-1">Obecne hasło:</label>
+            <label class="text-lg block mb-1">Obecne hasło:</label>
             <input type="password" bind:value={oldPassword}
                    class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1">Nowe hasło:</label>
+            <label class="text-lg block mb-1">Nowe hasło:</label>
             <input type="password" bind:value={newPassword}
                    class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1">Potwierdź nowe hasło:</label>
+            <label class="text-lg block mb-1">Potwierdź nowe hasło:</label>
             <input type="password" bind:value={confirmPassword}
                    class="w-full p-2 bg-neutral-900 border border-neutral-700 rounded-special text-neutral-100" />
         </div>

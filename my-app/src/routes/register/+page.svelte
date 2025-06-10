@@ -9,6 +9,10 @@
     let password = "";
     let sex: Sex;
     let preference: Preference;
+    let age = 0;
+    let age_min = 0;
+    let age_max = 100;
+    let description = "";
     let error = "";
 
     async function registerUser() {
@@ -18,7 +22,11 @@
                 login,
                 password,
                 sex,
-                preference
+                preference,
+                age,
+                age_min,
+                age_max,
+                description
             });
             window.location.href = "/login";
         } catch (err) {
@@ -73,6 +81,34 @@
                     <option value="Women">Women</option>
                     <option value="Both">Both</option>
                 </select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="age">Age</label>
+                <input bind:value={age}
+                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                        id="age" required>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="age_min">Minimum age preference</label>
+                <input bind:value={age_min}
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                       id="age_min" required>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="age_max">Maximum age preference</label>
+                <input bind:value={age_max}
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                       id="age_max" required>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="description">Description</label>
+                <input bind:value={description}
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                       id="description" required>
             </div>
 
             <button class="bg-primary-700 rounded-lg h-8 shadow-button" type="submit">Register</button>
