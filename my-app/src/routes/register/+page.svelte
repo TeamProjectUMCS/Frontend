@@ -83,12 +83,12 @@
                 </select>
             </div>
 
-<!--            <div class="flex flex-col gap-1">-->
-<!--                <label for="age">Age</label>-->
-<!--                <input bind:value={age}-->
-<!--                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"-->
-<!--                        id="age" required>-->
-<!--            </div>-->
+            <div class="flex flex-col gap-1">
+                <label for="age">Age</label>
+                <input bind:value={age}
+                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                        id="age" required>
+            </div>
 
             <div class="flex flex-col gap-1">
                 <label for="age_min">Minimum age preference</label>
