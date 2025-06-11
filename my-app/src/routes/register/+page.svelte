@@ -42,7 +42,7 @@
     }
 </script>
 
-<div class="flex flex-col items-center h-screen  text-neutral-100">
+<div class="flex flex-col items-center h-full bg-neutral-900 text-neutral-100">
     <div class="flex flex-col gap-2 my-6 w-3/7 border-secondary-400 border-2 rounded-lg bg-neutral-900 p-8 max-w-[400px] shadow-form">
         <h2 class="text-4xl font-bold text-center">Register</h2>
         <form class="flex flex-col gap-6 mx-auto my-6 max-w-full min-w-form" on:submit|preventDefault={registerUser}>
