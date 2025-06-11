@@ -110,7 +110,8 @@ export interface RegisterRequest {
     age: number,
     age_min: number,
     age_max: number,
-    description: string
+    description: string,
+    localization: string
 }
 
 export interface RegisterResponseDto {
@@ -125,7 +126,8 @@ export interface UserMatchDto {
     sex: Sex;
     age: number;
     preference: Preference;
-    // hobbies: List,
+    hobbies: string[],
+    localization: string,
     description:string;
 
 }

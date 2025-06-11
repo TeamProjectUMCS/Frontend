@@ -14,6 +14,7 @@
     let age_max = 100;
     let description = "";
     let error = "";
+    let localization = "";
 
     async function registerUser() {
         try {
@@ -26,7 +27,8 @@
                 age,
                 age_min,
                 age_max,
-                description
+                description,
+                localization
             });
             window.location.href = "/login";
         } catch (err) {
@@ -109,6 +111,13 @@
                 <input bind:value={description}
                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                        id="description" required>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="localization">Localization</label>
+                <input bind:value={localization}
+                       class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
+                       id="localization" required>
             </div>
 
             <button class="bg-primary-700 rounded-lg h-8 shadow-button" type="submit">Register</button>
