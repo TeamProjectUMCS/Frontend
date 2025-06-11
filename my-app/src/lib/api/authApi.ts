@@ -1,6 +1,7 @@
 import {auth} from "$lib/auth/auth";
 import type Sex from "$lib/data/Sex";
 import type Preference from "$lib/data/Preference";
+import type { Hobby } from "$lib/data/Hobby"; // zakładam, że masz enum Hobby w tym miejscu
 import type {List} from "postcss/lib/list";
 
 const API_URL = 'http://localhost:8080';
@@ -110,8 +111,12 @@ export interface RegisterRequest {
     age: number,
     age_min: number,
     age_max: number,
-    description: string
+    description: string,
+    localization: string,
+    hobbies: string[];
+
 }
+
 
 export interface RegisterResponseDto {
     username: string;
@@ -125,7 +130,8 @@ export interface UserMatchDto {
     sex: Sex;
     age: number;
     preference: Preference;
-    // hobbies: List,
+    hobbies: string[],
+    localization: string,
     description:string;
 
 }
