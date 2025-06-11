@@ -1,7 +1,8 @@
 <script lang="ts">
-    import {authAPI} from "$lib/api/authApi";
+    import { authAPI } from "$lib/api/authApi";
     import type Preference from "$lib/data/Preference";
     import type Sex from "$lib/data/Sex";
+    import { hobbies as hobbyOptions } from "$lib/data/HobbyList"; // <-- poprawny import
     import ErrorPopup from "$lib/shared/ErrorPopup.svelte";
 
     let username = "";
@@ -16,6 +17,8 @@
     let error = "";
     let localization = "";
 
+    let selectedHobbies: string[] = []; // <-- dodane
+
     async function registerUser() {
         try {
             const response = await authAPI.register({
@@ -28,7 +31,8 @@
                 age_min,
                 age_max,
                 description,
-                localization
+                localization,
+                hobbies: selectedHobbies // <-- wysyłamy wybrane hobby
             });
             window.location.href = "/login";
         } catch (err) {
@@ -119,6 +123,19 @@
                        class="rounded-lg pl-2 h-8 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button"
                        id="localization" required>
             </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="hobbies">Hobbies</label>
+                <select id="hobbies"
+                        bind:value={selectedHobbies}
+                        multiple
+                        class="rounded-lg h-32 pl-2 border-2 border-secondary-400 bg-neutral-800 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-700 shadow-button">
+                    {#each hobbyOptions as hobby}
+                        <option value={hobby}>{hobby}</option>
+                    {/each}
+                </select>
+            </div>
+
 
             <button class="bg-primary-700 rounded-lg h-8 shadow-button" type="submit">Register</button>
         </form>
