@@ -47,6 +47,7 @@
 	},
 	"dependencies": {
 		"@stomp/stompjs": "^7.1.1",
-		"stomp": "^0.1.1"
+		"stomp": "^0.1.1",
+		"svelte-select": "^5.8.3"
 	}
 }
