@@ -11,13 +11,13 @@
     <div class="flex items-center">
         <input
             bind:value={chat.newMessage}
-            class="flex-1 bg-gray-800 border border-gray-700 rounded-l-md py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            class="flex-1 bg-background  border border-gray-700 rounded-l-md py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
             on:keydown={(e) => handleKeydown(e, onSend)}
             placeholder="Type a message..."
             type="text"
         />
         <button
-            class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-2 px-4 rounded-r-md border border-gray-700 border-l-0"
+            class="bg-background  hover:bg-gray-600 text-gray-200 py-2 px-4 rounded-r-md border border-gray-700 border-l-0"
             on:click={onSend}
         >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

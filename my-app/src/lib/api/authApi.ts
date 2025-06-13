@@ -102,6 +102,7 @@ export interface JwtResponseDto {
     token: string;
 }
 
+
 export interface RegisterRequest {
     username: string;
     login: string;
@@ -133,5 +134,4 @@ export interface UserMatchDto {
     hobbies: string[],
     localization: string,
     description:string;
-
 }
