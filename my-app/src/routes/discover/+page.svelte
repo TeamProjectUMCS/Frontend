@@ -1,7 +1,10 @@
 <script lang="ts">
     import type { UserMatchDto } from "$lib/api/authApi";
+    import Sex from "\$lib/data/Sex";
     import { onMount } from "svelte";
-    import logo from "$lib/images/logo1.png";
+    import male_pfp from "$lib/images/male_pfp.png";
+    import female_pfp from "$lib/images/female_pfp.png";
+    import other_pfp from "$lib/images/other_pfp.png";
 
     let loading: boolean = true;
     let error: string | null = null;
@@ -46,7 +49,7 @@
         if (currentIndex < potentialMatches.length - 1) {
             currentIndex++;
         } else {
-            currentIndex = 0; // lub fetchPotentialMatches() by pobrać nowych
+            potentialMatches=[];
         }
     }
 
@@ -64,7 +67,13 @@
 {:else}
     <div class="flex flex-col md:flex-col gap-6 p-6 items-center max-w-4xl mx-auto m-10 bg-background text-neutral-100 rounded-2xl shadow-form font-sans h-full">
         <div class="flex flex-col items-center p-4 rounded-xl border-2 border-secondary-700 w-full min-h-128 bg-neutral-950">
-            <img src={logo} alt="User Image" class="w-60 h-60 object-cover m-4" />
+            {#if potentialMatches[currentIndex].sex===Sex.MALE}
+            <img src={male_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
+            {:else if potentialMatches[currentIndex].sex===Sex.FEMALE}
+            <img src={female_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
+            {:else}
+            <img src={other_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
+            {/if}
             <div class="text-center m-3 border-2 border-secondary-700 rounded-xl min-w-80 min-h-48 p-4">
                 <h2 class="text-xl font-semibold">
                     {potentialMatches[currentIndex].username}, {potentialMatches[currentIndex].age} lat
