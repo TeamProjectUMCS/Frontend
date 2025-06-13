@@ -3,6 +3,9 @@ import { Client } from '@stomp/stompjs';
 import type { StompSubscription, IMessage } from '@stomp/stompjs';
 import { apiRequest } from '$lib/api/authApi';
 import { userStorage } from '$lib/auth/userStorage';
+import { writable } from "svelte/store";
+
+export const userMatches = writable<Match[]>([]);
 
 export type MessageSender = 'self' | 'other';
 
@@ -16,7 +19,7 @@ export interface ChatMessage {
 
 export interface Match {
     id: number;
-    name: string;
+    username: string;
     isActive: boolean;
 }
 
@@ -34,22 +37,31 @@ export interface MessageResponseDto {
     timestamp: number;
 }
 
-export function loadMatches(): Match[] {
-    let curr = userStorage.getUser();
-    let Match1: Match = {
-        id: 1,
-        name: 'test',
-        isActive: true
-    };
-    let Match2: Match = {
-        id: 2,
-        name: 'test2',
-        isActive: true
-    };
-    if (curr === "test") {
-        return [Match2];
-    } else {
-        return [Match1];
+export async function loadMatches(): Promise<void> {
+    const token = localStorage.getItem("jwt_token");
+    if (!token) {
+        console.error("JWT token not found");
+        userMatches.set([]);
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:8080/matches/all", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error(`Server error: ${res.status} ${res.statusText}`);
+        }
+
+        const data: Match[] = await res.json();
+        userMatches.set(data);
+    } catch (err) {
+        console.error("Failed to load matches:", err);
+        userMatches.set([]);
     }
 }
 
@@ -83,16 +95,15 @@ export function initializeWebSocket(onConnectCallback?: () => void, onStompError
 }
 
 export async function selectMatch(chat: any, matchId: number, currentUserId: number, stompClient: Client | null, subscription: StompSubscription | null, chatContainer: HTMLElement) {
-    // Update active Match in UI
-    chat.matches = chat.matches.map((match: Match) => ({
+    chat.users = chat.users.map((match: Match) => ({
         ...match,
         isActive: match.id === matchId
     }));
 
-    // Load message history for this match
     try {
         const messageHistory = await apiRequest<MessageResponseDto[]>(`/chat/${matchId}`);
-        chat.messages = messageHistory.map(msg => ({
+
+        const newMessages = messageHistory.map(msg => ({
             id: msg.id,
             text: msg.content,
             sender: msg.senderId === currentUserId ? 'self' : 'other',
@@ -100,7 +111,8 @@ export async function selectMatch(chat: any, matchId: number, currentUserId: num
             senderId: msg.senderId
         }));
 
-        // Subscribe to this match's WebSocket topic
+        chat.messages = newMessages;
+
         if (stompClient && stompClient.connected) {
             if (subscription) {
                 subscription.unsubscribe();
@@ -132,22 +144,24 @@ export async function selectMatch(chat: any, matchId: number, currentUserId: num
     }
 }
 
-export function sendMessage(chat: any, currentMatchId: number, userID: number , stompClient: Client | null) {
-    if (chat.newMessage.trim() === "" || !currentMatchId) return;
+export function sendMessage(message: string, currentMatchId: number, userID: number , stompClient: Client | null) {
+    if (message.trim() === "" || !currentMatchId) return;
+
     const messageToSend: MessageRequestDto = {
         timestamp: Date.now(),
-        content: chat.newMessage,
+        content: message,
         writtenBy: userID,
         matchId: currentMatchId
     };
+
     console.log('Sending message:', messageToSend);
+
     if (stompClient && stompClient.connected) {
         stompClient.publish({
             destination: `/app/chat/${currentMatchId}`,
             body: JSON.stringify(messageToSend)
         });
     }
-    chat.newMessage = "";
 }
 
 export function handleKeydown(event: KeyboardEvent, sendMessageHandler: () => void) {
