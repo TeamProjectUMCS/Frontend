@@ -56,6 +56,39 @@
     onMount(() => {
         fetchPotentialMatches();
     });
+
+    async function likeUser(likedUserId: number): Promise<void>
+    {
+        const token = localStorage.getItem("jwt_token");
+        if (!token) {
+            console.error("Brak tokena JWT");
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://localhost:8080/matches/like/${likedUserId}`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error(`Błąd serwera: ${res.status} ${res.statusText}`);
+            }
+
+            const message = await res.text();
+            console.log("Odpowiedź serwera:", message);
+
+            skipUser();
+
+        } catch (error) {
+            console.error("blad przy lajkowaniu:", error);
+        }
+    }
+
+
 </script>
 
 {#if loading}
@@ -92,7 +125,8 @@
                 Skip
             </button>
 
-            <button class="button shadow-button bg-primary-700 hover:bg-primary-500 transition-colors duration-300 rounded-xl min-h-16 text-lg min-w-52">
+            <button class="button shadow-button bg-primary-700 hover:bg-primary-500 transition-colors duration-300 rounded-xl min-h-16 text-lg min-w-52"
+                    on:click={() => likeUser(potentialMatches[currentIndex].id)}>
                 Like
             </button>
         </div>
