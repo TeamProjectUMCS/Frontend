@@ -11,7 +11,7 @@
 
 <!-- WAZNE NIE DA SIE SKROLLOWAC STRONY DOPOKI JEST TUTAJ OVERFLOW-HIDDEN, w galeri zrobimy wlasnego skrola czy cos , zeby ladnie wygladalo -->
 <div class="flex flex-col bg-background text-neutral-100 w-full h-full ">
-	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register' && page.url.pathname !== '/'}
+	{#if page.url.pathname !== '/login' && page.url.pathname !== '/register' && page.url.pathname !== '/' && page.url.pathname !== '/main'}
 		<Header/>
 	{/if}
 
