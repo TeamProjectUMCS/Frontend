@@ -63,12 +63,21 @@
                 console.warn("No matches found");
             }
         });
+        function scrollToBottom() {
+            setTimeout(() => {
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }, 50);
+        }
+
 
         initializeWebSocket(
             async () => {
                 console.log('Connected to WebSocket');
                 if (currentUser && firstMatchId !== null && firstMatchId !== undefined) {
-                    await selectMatch(chat, firstMatchId, currentUser.id, stompClient, subscription, chatContainer);
+                    await selectMatch(chat, firstMatchId, currentUser.id, stompClient, (sub) => subscription = sub, chatContainer);
+
                 } else {
                     console.warn("Cannot select match: Missing currentUser or firstMatchId");
                 }
@@ -114,6 +123,7 @@
         currentMatchId = matchId;
 
         if (currentUser) {
+            //let subscriptionRef = { current: subscription };
             await selectMatch(chat, matchId, currentUser.id, stompClient, subscription, chatContainer);
         }
     }
@@ -130,6 +140,7 @@
 
             sendMessage(message, currentMatchId, currentUser.id, stompClient);
             chat.newMessage = "";
+            //scrollToBottom();
         }
     }
 

@@ -33,7 +33,7 @@ export interface MessageRequestDto {
 export interface MessageResponseDto {
     id: number;
     content: string;
-    senderId: number;
+    writtenBy: number;
     timestamp: number;
 }
 
@@ -94,7 +94,15 @@ export function initializeWebSocket(onConnectCallback?: () => void, onStompError
     stompClient.activate();
 }
 
-export async function selectMatch(chat: any, matchId: number, currentUserId: number, stompClient: Client | null, subscription: StompSubscription | null, chatContainer: HTMLElement) {
+export async function selectMatch(
+    chat: any,
+    matchId: number,
+    currentUserId: number,
+    stompClient: Client | null,
+    setSubscription: (sub: StompSubscription | null) => void,
+    chatContainer: HTMLElement
+) {
+    // Oznacz aktywny match
     chat.users = chat.users.map((match: Match) => ({
         ...match,
         isActive: match.id === matchId
@@ -102,22 +110,24 @@ export async function selectMatch(chat: any, matchId: number, currentUserId: num
 
     try {
         const messageHistory = await apiRequest<MessageResponseDto[]>(`/chat/${matchId}`);
-
-        const newMessages = messageHistory.map(msg => ({
-            id: msg.id,
-            text: msg.content,
-            sender: msg.senderId === currentUserId ? 'self' : 'other',
-            timestamp: new Date(msg.timestamp),
-            senderId: msg.senderId
-        }));
+        console.log('currentUserId:', currentUserId);
+        console.log('messageHistory:', messageHistory);
+        // Posortuj wiadomości rosnąco po dacie
+        const newMessages = messageHistory
+            .map(msg => ({
+                id: msg.id,
+                text: msg.content,
+                sender: msg.writtenBy === currentUserId ? 'self' : 'other',
+                timestamp: new Date(msg.timestamp),
+                senderId: msg.writtenBy
+            }))
+            .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
         chat.messages = newMessages;
 
+        // Odsubskrybuj poprzedni temat
         if (stompClient && stompClient.connected) {
-            if (subscription) {
-                subscription.unsubscribe();
-            }
-            subscription = stompClient.subscribe(`/topic/messages/${matchId}`, (message: IMessage) => {
+            const newSubscription = stompClient.subscribe(`/topic/messages/${matchId}`, (message: IMessage) => {
                 const receivedMessage = JSON.parse(message.body) as MessageRequestDto;
                 const newMsg: ChatMessage = {
                     id: chat.messages.length + 1,
@@ -126,23 +136,29 @@ export async function selectMatch(chat: any, matchId: number, currentUserId: num
                     timestamp: new Date(receivedMessage.timestamp),
                     senderId: receivedMessage.writtenBy
                 };
+
                 chat.messages.push(newMsg);
-                setTimeout(() => {
-                    if (chatContainer) {
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }
-                }, 50);
+                scrollToBottom(chatContainer);
             });
+
+            // Ustaw nową subskrypcję (po odsubskrybowaniu poprzedniej)
+            setSubscription(newSubscription);
         }
-        setTimeout(() => {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-        }, 50);
+
+        // Scroll po załadowaniu historii
+        scrollToBottom(chatContainer);
     } catch (error) {
         console.error('Error loading messages:', error);
     }
 }
+
+function scrollToBottom(container: HTMLElement) {
+    setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+    }, 50);
+}
+
+
 
 export function sendMessage(message: string, currentMatchId: number, userID: number , stompClient: Client | null) {
     if (message.trim() === "" || !currentMatchId) return;
