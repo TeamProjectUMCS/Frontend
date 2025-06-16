@@ -103,7 +103,7 @@
             {#if potentialMatches[currentIndex].sex===Sex.MALE}
             <img src={male_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
             {:else if potentialMatches[currentIndex].sex===Sex.FEMALE}
-            <img src={female_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
+            <img src={female_pfp} alt="User Image" class="w-70 h-60 object-cover m-4" />
             {:else}
             <img src={other_pfp} alt="User Image" class="w-60 h-60 object-cover m-4" />
             {/if}
