@@ -2,6 +2,6 @@
     import Chat from "./Chat.svelte";
 </script>
 
-<div class="h-full w-full overflow-hidden ">
+<div class="h-full bg-background w-full overflow-hidden ">
     <Chat/>
 </div>

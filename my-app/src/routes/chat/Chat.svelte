@@ -142,18 +142,18 @@
     }
 </script>
 
-<div class="flex h-full w-full bg-background text-gray-100 overflow-hidden">
+<div class="flex h-full w-full bg-background text-white overflow-hidden">
 
     <div class="flex w-full h-full overflow-hidden">
 
-        <div class="w-40 border-r border-gray-700 h-almost-screen overflow-y-auto flex-shrink-0">
+        <div class="w-40 border-r border-secondary-700 h-almost-screen overflow-y-auto ">
             <div class="p-2">
                 {#each chat.users as match (match.id)}
                     <div
                         class="flex items-center p-2 mb-2 hover:bg-primary-950 rounded cursor-pointer {match.isActive ? 'bg-neutral-800 border-l-2 border-primary-600' : ''}"
                         on:click={() => selectUserHandler(match.id)}>
 
-                        <div class="w-6 h-6 rounded-full {match.isActive ? 'bg-primary-700' : 'bg-gray-400'} flex-shrink-0"></div>
+                        <div class="w-6 h-6 rounded-full {match.isActive ? 'bg-primary-700' : 'bg-gray-400'}"></div>
                         <div class="ml-2 truncate text-sm {match.isActive ? 'font-medium text-gray-200' : 'text-gray-400'}">
                             {match.username}
                         </div>
@@ -163,16 +163,17 @@
         </div>
 
 
-        <div class="flex-1 flex flex-col h-full overflow-hidden">
-            <div bind:this={chatContainer} class="h-64 flex-1 overflow-y-auto p-4 space-y-4 max-h-128 ">
+        <div class="flex-1 flex flex-col h-almost-screen overflow-hidden">
+            <div bind:this={chatContainer} class="flex-1 overflow-y-auto p-4 space-y-4">
                 <div class="flex flex-col space-y-4 " >
                     {#each chat.messages as message}
                         <MessageDisplay {message} />
                     {/each}
                 </div>
             </div>
-
-            <MessageInput {chat} onSend={sendMessageHandler} />
+            <div class="h-[10%]">
+                <MessageInput {chat} onSend={sendMessageHandler} />
+            </div>
         </div>
     </div>
 </div>
